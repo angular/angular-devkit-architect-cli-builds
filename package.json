@@ -17,8 +17,8 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#cdce621",
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#cdce621",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#55fd399",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#55fd399",
     "minimist": "^1.2.0",
     "symbol-observable": "^1.2.0",
     "rxjs": "^6.0.0"
