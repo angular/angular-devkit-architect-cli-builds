@@ -17,8 +17,8 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#214e8ef",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#214e8ef",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#f204910",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#f204910",
     "@types/progress": "^2.0.3",
     "ascii-progress": "^1.0.5",
     "minimist": "1.2.0",
@@ -39,5 +39,11 @@
   "bugs": {
     "url": "https://github.com/angular/angular-cli/issues"
   },
-  "homepage": "https://github.com/angular/angular-cli"
+  "homepage": "https://github.com/angular/angular-cli",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "node ./bin/devkit-admin hooks/pre-push"
+    }
+  }
 }
