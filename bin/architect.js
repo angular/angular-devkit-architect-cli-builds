@@ -52,7 +52,7 @@ function _targetStringFromTarget({ project, target, configuration }) {
 }
 async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     const architectHost = new node_1.WorkspaceNodeModulesArchitectHost(workspace, root);
-    const architect = new architect_1.index2.Architect(architectHost, registry);
+    const architect = new architect_1.Architect(architectHost, registry);
     // Split a target into its parts.
     const targetStr = argv._.shift() || '';
     const [project, target, configuration] = targetStr.split(':');
@@ -77,19 +77,19 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
             data.status = update.status;
         }
         switch (update.state) {
-            case architect_1.index2.BuilderProgressState.Error:
+            case architect_1.BuilderProgressState.Error:
                 data.status = 'Error: ' + update.error;
                 bars.update(update.id, data);
                 break;
-            case architect_1.index2.BuilderProgressState.Stopped:
+            case architect_1.BuilderProgressState.Stopped:
                 data.status = 'Done.';
                 bars.complete(update.id);
                 bars.update(update.id, data, update.total, update.total);
                 break;
-            case architect_1.index2.BuilderProgressState.Waiting:
+            case architect_1.BuilderProgressState.Waiting:
                 bars.update(update.id, data);
                 break;
-            case architect_1.index2.BuilderProgressState.Running:
+            case architect_1.BuilderProgressState.Running:
                 bars.update(update.id, data, update.current, update.total);
                 break;
         }
