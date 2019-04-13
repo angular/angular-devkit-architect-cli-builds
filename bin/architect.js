@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 const architect_1 = require("@angular-devkit/architect");
 const node_1 = require("@angular-devkit/architect/node");
 const core_1 = require("@angular-devkit/core");
@@ -61,7 +68,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     delete argv['_'];
     const logger = new core_1.logging.Logger('jobs');
     const logs = [];
-    logger.subscribe(entry => logs.push(Object.assign({}, entry, { message: `${entry.name}: ` + entry.message })));
+    logger.subscribe(entry => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
     const run = await architect.scheduleTarget(targetSpec, argv, { logger });
     const bars = new progress_1.MultiProgressBar(':name :bar (:current/:total) :status');
     run.progress.subscribe(update => {
@@ -104,7 +111,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
             else {
                 parentLogger.info(core_1.terminal.yellow('FAILURE'));
             }
-            parentLogger.info('Result: ' + JSON.stringify(Object.assign({}, result, { info: undefined }), null, 4));
+            parentLogger.info('Result: ' + JSON.stringify({ ...result, info: undefined }, null, 4));
             parentLogger.info('\nLogs:');
             logs.forEach(l => parentLogger.next(l));
             logs.splice(0);
