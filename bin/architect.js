@@ -155,9 +155,13 @@ async function main(args) {
         return 3;
     }
     const root = path.dirname(configFilePath);
+    const configContent = fs_1.readFileSync(configFilePath, 'utf-8');
+    const workspaceJson = JSON.parse(configContent);
     const registry = new core_1.schema.CoreSchemaRegistry();
     registry.addPostTransform(core_1.schema.transforms.addUndefinedDefaults);
-    const { workspace } = await core_1.workspaces.readWorkspace(configFilePath, core_1.workspaces.createWorkspaceHost(new node_2.NodeJsSyncHost()));
+    const host = new node_2.NodeJsSyncHost();
+    const workspace = new core_1.experimental.workspace.Workspace(core_1.normalize(root), host);
+    await workspace.loadWorkspaceFromJson(workspaceJson).toPromise();
     // Clear the console.
     process.stdout.write('\u001Bc');
     return await _executeTarget(logger, workspace, root, argv, registry);
