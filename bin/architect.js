@@ -77,8 +77,8 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
             builder: update.builder,
             target: update.target,
             status: update.status || '',
-            name: ((update.target ? _targetStringFromTarget(update.target) : update.builder.name)
-                + ' '.repeat(80)).substr(0, 40),
+            name: ((update.target ? _targetStringFromTarget(update.target) : update.builder.name) +
+                ' '.repeat(80)).substr(0, 40),
         };
         if (update.status !== undefined) {
             data.status = update.status;
@@ -104,7 +104,8 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     });
     // Wait for full completion of the builder.
     try {
-        const { success } = await run.output.pipe(operators_1.tap(result => {
+        const { success } = await run.output
+            .pipe(operators_1.tap(result => {
             if (result.success) {
                 parentLogger.info(core_1.terminal.green('SUCCESS'));
             }
@@ -115,7 +116,8 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
             parentLogger.info('\nLogs:');
             logs.forEach(l => parentLogger.next(l));
             logs.splice(0);
-        })).toPromise();
+        }))
+            .toPromise();
         await run.stop();
         bars.terminate();
         return success ? 0 : 1;
@@ -142,16 +144,11 @@ async function main(args) {
     }
     // Load workspace configuration file.
     const currentPath = process.cwd();
-    const configFileNames = [
-        'angular.json',
-        '.angular.json',
-        'workspace.json',
-        '.workspace.json',
-    ];
+    const configFileNames = ['angular.json', '.angular.json', 'workspace.json', '.workspace.json'];
     const configFilePath = findUp(configFileNames, currentPath);
     if (!configFilePath) {
-        logger.fatal(`Workspace configuration file (${configFileNames.join(', ')}) cannot be found in `
-            + `'${currentPath}' or in parent directories.`);
+        logger.fatal(`Workspace configuration file (${configFileNames.join(', ')}) cannot be found in ` +
+            `'${currentPath}' or in parent directories.`);
         return 3;
     }
     const root = path.dirname(configFilePath);
@@ -162,10 +159,10 @@ async function main(args) {
     process.stdout.write('\u001Bc');
     return await _executeTarget(logger, workspace, root, argv, registry);
 }
-main(process.argv.slice(2))
-    .then(code => {
+main(process.argv.slice(2)).then(code => {
     process.exit(code);
 }, err => {
+    // tslint:disable-next-line: no-console
     console.error('Error: ' + err.stack || err.message || err);
     process.exit(-1);
 });
