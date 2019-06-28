@@ -1,6 +1,6 @@
 {
   "name": "@angular-devkit/architect-cli",
-  "version": "0.801.0-rc.0+4.f9ae8ab",
+  "version": "0.801.0-rc.0+5.faa255a",
   "description": "Angular Architect CLI",
   "experimental": true,
   "bin": {
@@ -18,8 +18,8 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#f9ae8ab56",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#f9ae8ab56",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#faa255afc",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#faa255afc",
     "@types/progress": "^2.0.3",
     "minimist": "1.2.0",
     "progress": "^2.0.3",
@@ -42,7 +42,6 @@
   "homepage": "https://github.com/angular/angular-cli",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
       "pre-push": "node ./bin/devkit-admin hooks/pre-push"
     }
   }
