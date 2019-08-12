@@ -51,7 +51,8 @@ function usage(logger, exitCode = 0) {
 
     Any additional option is passed the target, overriding existing options.
   `);
-    return process.exit(exitCode);
+    process.exit(exitCode);
+    throw 0; // The node typing sometimes don't have a never type for process.exit().
 }
 function _targetStringFromTarget({ project, target, configuration }) {
     return `${project}:${target}${configuration !== undefined ? ':' + configuration : ''}`;
