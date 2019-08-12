@@ -7,7 +7,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-const core_1 = require("@angular-devkit/core");
 const ProgressBar = require("progress");
 const readline = require("readline");
 class MultiProgressBar {
@@ -17,7 +16,7 @@ class MultiProgressBar {
         this._bars = new Map();
     }
     _add(id, data) {
-        const width = Math.min(80, core_1.terminal.getCapabilities(this._stream).columns || 80);
+        const width = Math.min(80, this._stream.columns || 80);
         const value = {
             data,
             bar: new ProgressBar(this._status, {
