@@ -64,7 +64,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     const [project, target, configuration] = targetStr.split(':');
     const targetSpec = { project, target, configuration };
     delete argv['help'];
-    argv['_'] = [];
+    delete argv['_'];
     const logger = new core_1.logging.Logger('jobs');
     const logs = [];
     logger.subscribe(entry => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
