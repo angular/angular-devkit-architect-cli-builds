@@ -153,6 +153,8 @@ async function main(args) {
     const root = path.dirname(configFilePath);
     const registry = new core_1.schema.CoreSchemaRegistry();
     registry.addPostTransform(core_1.schema.transforms.addUndefinedDefaults);
+    // Show usage of deprecated options
+    registry.useXDeprecatedProvider(msg => logger.warn(msg));
     const { workspace } = await core_1.workspaces.readWorkspace(configFilePath, core_1.workspaces.createWorkspaceHost(new node_2.NodeJsSyncHost()));
     // Clear the console.
     process.stdout.write('\u001Bc');
