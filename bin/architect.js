@@ -12,6 +12,7 @@ const architect_1 = require("@angular-devkit/architect");
 const node_1 = require("@angular-devkit/architect/node");
 const core_1 = require("@angular-devkit/core");
 const node_2 = require("@angular-devkit/core/node");
+const ansiColors = require("ansi-colors");
 const fs_1 = require("fs");
 const minimist = require("minimist");
 const path = require("path");
@@ -56,6 +57,9 @@ function usage(logger, exitCode = 0) {
 function _targetStringFromTarget({ project, target, configuration }) {
     return `${project}:${target}${configuration !== undefined ? ':' + configuration : ''}`;
 }
+// Create a separate instance to prevent unintended global changes to the color configuration
+// Create function is not defined in the typings. See: https://github.com/doowb/ansi-colors/pull/44
+const colors = ansiColors.create();
 async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     const architectHost = new node_1.WorkspaceNodeModulesArchitectHost(workspace, root);
     const architect = new architect_1.Architect(architectHost, registry);
@@ -106,10 +110,10 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         const { success } = await run.output
             .pipe(operators_1.tap(result => {
             if (result.success) {
-                parentLogger.info(core_1.terminal.green('SUCCESS'));
+                parentLogger.info(colors.green('SUCCESS'));
             }
             else {
-                parentLogger.info(core_1.terminal.yellow('FAILURE'));
+                parentLogger.info(colors.red('FAILURE'));
             }
             parentLogger.info('Result: ' + JSON.stringify({ ...result, info: undefined }, null, 4));
             parentLogger.info('\nLogs:');
@@ -122,7 +126,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         return success ? 0 : 1;
     }
     catch (err) {
-        parentLogger.info(core_1.terminal.red('ERROR'));
+        parentLogger.info(colors.red('ERROR'));
         parentLogger.info('\nLogs:');
         logs.forEach(l => parentLogger.next(l));
         parentLogger.fatal('Exception:');
@@ -134,7 +138,13 @@ async function main(args) {
     /** Parse the command line. */
     const argv = minimist(args, { boolean: ['help'] });
     /** Create the DevKit Logger used through the CLI. */
-    const logger = node_2.createConsoleLogger(argv['verbose']);
+    const logger = node_2.createConsoleLogger(argv['verbose'], process.stdout, process.stderr, {
+        info: s => s,
+        debug: s => s,
+        warn: s => colors.bold.yellow(s),
+        error: s => colors.bold.red(s),
+        fatal: s => colors.bold.red(s),
+    });
     // Check the target.
     const targetStr = argv._[0] || '';
     if (!targetStr || argv.help) {
