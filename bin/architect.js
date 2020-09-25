@@ -64,11 +64,11 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     const [project, target, configuration] = targetStr.split(':');
     const targetSpec = { project, target, configuration };
     delete argv['help'];
-    argv['_'] = [];
     const logger = new core_1.logging.Logger('jobs');
     const logs = [];
     logger.subscribe(entry => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
-    const run = await architect.scheduleTarget(targetSpec, argv, { logger });
+    const { _, ...options } = argv;
+    const run = await architect.scheduleTarget(targetSpec, options, { logger });
     const bars = new progress_1.MultiProgressBar(':name :bar (:current/:total) :status');
     run.progress.subscribe(update => {
         const data = bars.get(update.id) || {
