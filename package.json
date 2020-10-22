@@ -1,6 +1,6 @@
 {
   "name": "@angular-devkit/architect-cli",
-  "version": "0.1100.0-next.7+75.27234ef",
+  "version": "0.1002.0+2.a5bbcd5",
   "description": "Angular Architect CLI",
   "experimental": true,
   "bin": {
@@ -18,13 +18,12 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#27234ef75",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#27234ef75",
-    "ansi-colors": "4.1.1",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#a5bbcd56b",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#a5bbcd56b",
     "minimist": "1.2.5",
     "progress": "2.0.3",
-    "rxjs": "6.6.3",
-    "symbol-observable": "2.0.3"
+    "rxjs": "6.6.2",
+    "symbol-observable": "1.2.0"
   },
   "repository": {
     "type": "git",
@@ -43,8 +42,7 @@
   "homepage": "https://github.com/angular/angular-cli",
   "husky": {
     "hooks": {
-      "commit-msg": "yarn -s ng-dev commit-message pre-commit-validate --file-env-variable HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "yarn -s ng-dev commit-message restore-commit-message-draft --file-env-variable HUSKY_GIT_PARAMS"
+      "pre-push": "node ./bin/devkit-admin hooks/pre-push"
     }
   }
 }
