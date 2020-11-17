@@ -1,6 +1,6 @@
 {
   "name": "@angular-devkit/architect-cli",
-  "version": "0.1100.1+11.15af387",
+  "version": "0.1100.1+12.fb9d4e2",
   "description": "Angular Architect CLI",
   "experimental": true,
   "bin": {
@@ -18,8 +18,8 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#15af387c1",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#15af387c1",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#fb9d4e298",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#fb9d4e298",
     "ansi-colors": "4.1.1",
     "minimist": "1.2.5",
     "progress": "2.0.3",
