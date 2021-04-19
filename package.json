@@ -19,13 +19,13 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#1a8ed40db",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#1a8ed40db",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#b7fc0231e",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#b7fc0231e",
     "ansi-colors": "4.1.1",
     "minimist": "1.2.5",
     "progress": "2.0.3",
     "rxjs": "6.6.7",
-    "symbol-observable": "3.0.0"
+    "symbol-observable": "4.0.0"
   },
   "repository": {
     "type": "git",
