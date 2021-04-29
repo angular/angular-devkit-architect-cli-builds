@@ -70,11 +70,11 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     delete argv['help'];
     const logger = new core_1.logging.Logger('jobs');
     const logs = [];
-    logger.subscribe(entry => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
+    logger.subscribe((entry) => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
     const { _, ...options } = argv;
     const run = await architect.scheduleTarget(targetSpec, options, { logger });
     const bars = new progress_1.MultiProgressBar(':name :bar (:current/:total) :status');
-    run.progress.subscribe(update => {
+    run.progress.subscribe((update) => {
         const data = bars.get(update.id) || {
             id: update.id,
             builder: update.builder,
@@ -108,7 +108,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     // Wait for full completion of the builder.
     try {
         const { success } = await run.output
-            .pipe(operators_1.tap(result => {
+            .pipe(operators_1.tap((result) => {
             if (result.success) {
                 parentLogger.info(colors.green('SUCCESS'));
             }
@@ -117,7 +117,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
             }
             parentLogger.info('Result: ' + JSON.stringify({ ...result, info: undefined }, null, 4));
             parentLogger.info('\nLogs:');
-            logs.forEach(l => parentLogger.next(l));
+            logs.forEach((l) => parentLogger.next(l));
             logs.splice(0);
         }))
             .toPromise();
@@ -128,7 +128,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     catch (err) {
         parentLogger.info(colors.red('ERROR'));
         parentLogger.info('\nLogs:');
-        logs.forEach(l => parentLogger.next(l));
+        logs.forEach((l) => parentLogger.next(l));
         parentLogger.fatal('Exception:');
         parentLogger.fatal(err.stack);
         return 2;
@@ -139,11 +139,11 @@ async function main(args) {
     const argv = minimist(args, { boolean: ['help'] });
     /** Create the DevKit Logger used through the CLI. */
     const logger = node_2.createConsoleLogger(argv['verbose'], process.stdout, process.stderr, {
-        info: s => s,
-        debug: s => s,
-        warn: s => colors.bold.yellow(s),
-        error: s => colors.bold.red(s),
-        fatal: s => colors.bold.red(s),
+        info: (s) => s,
+        debug: (s) => s,
+        warn: (s) => colors.bold.yellow(s),
+        error: (s) => colors.bold.red(s),
+        fatal: (s) => colors.bold.red(s),
     });
     // Check the target.
     const targetStr = argv._[0] || '';
@@ -164,15 +164,15 @@ async function main(args) {
     const registry = new core_1.schema.CoreSchemaRegistry();
     registry.addPostTransform(core_1.schema.transforms.addUndefinedDefaults);
     // Show usage of deprecated options
-    registry.useXDeprecatedProvider(msg => logger.warn(msg));
+    registry.useXDeprecatedProvider((msg) => logger.warn(msg));
     const { workspace } = await core_1.workspaces.readWorkspace(configFilePath, core_1.workspaces.createWorkspaceHost(new node_2.NodeJsSyncHost()));
     // Clear the console.
     process.stdout.write('\u001Bc');
     return await _executeTarget(logger, workspace, root, argv, registry);
 }
-main(process.argv.slice(2)).then(code => {
+main(process.argv.slice(2)).then((code) => {
     process.exit(code);
-}, err => {
+}, (err) => {
     // tslint:disable-next-line: no-console
     console.error('Error: ' + err.stack || err.message || err);
     process.exit(-1);
