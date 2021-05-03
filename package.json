@@ -19,8 +19,8 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#c1512e427",
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#c1512e427",
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#b2594bc22",
+    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#b2594bc22",
     "ansi-colors": "4.1.1",
     "minimist": "1.2.5",
     "progress": "2.0.3",
