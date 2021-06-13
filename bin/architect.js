@@ -7,15 +7,37 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const architect_1 = require("@angular-devkit/architect");
 const node_1 = require("@angular-devkit/architect/node");
 const core_1 = require("@angular-devkit/core");
 const node_2 = require("@angular-devkit/core/node");
-const ansiColors = require("ansi-colors");
+const ansiColors = __importStar(require("ansi-colors"));
 const fs_1 = require("fs");
-const minimist = require("minimist");
-const path = require("path");
+const minimist_1 = __importDefault(require("minimist"));
+const path = __importStar(require("path"));
 const operators_1 = require("rxjs/operators");
 const progress_1 = require("../src/progress");
 function findUp(names, from) {
@@ -136,7 +158,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
 }
 async function main(args) {
     /** Parse the command line. */
-    const argv = minimist(args, { boolean: ['help'] });
+    const argv = minimist_1.default(args, { boolean: ['help'] });
     /** Create the DevKit Logger used through the CLI. */
     const logger = node_2.createConsoleLogger(argv['verbose'], process.stdout, process.stderr, {
         info: (s) => s,
