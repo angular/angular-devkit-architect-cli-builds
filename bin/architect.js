@@ -49,7 +49,7 @@ function findUp(names, from) {
     while (currentDir && currentDir !== root) {
         for (const name of names) {
             const p = path.join(currentDir, name);
-            if (fs_1.existsSync(p)) {
+            if ((0, fs_1.existsSync)(p)) {
                 return p;
             }
         }
@@ -130,7 +130,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     // Wait for full completion of the builder.
     try {
         const { success } = await run.output
-            .pipe(operators_1.tap((result) => {
+            .pipe((0, operators_1.tap)((result) => {
             if (result.success) {
                 parentLogger.info(colors.green('SUCCESS'));
             }
@@ -158,9 +158,9 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
 }
 async function main(args) {
     /** Parse the command line. */
-    const argv = minimist_1.default(args, { boolean: ['help'] });
+    const argv = (0, minimist_1.default)(args, { boolean: ['help'] });
     /** Create the DevKit Logger used through the CLI. */
-    const logger = node_2.createConsoleLogger(argv['verbose'], process.stdout, process.stderr, {
+    const logger = (0, node_2.createConsoleLogger)(argv['verbose'], process.stdout, process.stderr, {
         info: (s) => s,
         debug: (s) => s,
         warn: (s) => colors.bold.yellow(s),
