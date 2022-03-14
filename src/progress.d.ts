@@ -10,9 +10,7 @@ export declare class MultiProgressBar<Key, T> {
     private _status;
     private _stream;
     private _bars;
-    constructor(_status: string, _stream?: NodeJS.WriteStream & {
-        fd: 2;
-    });
+    constructor(_status: string, _stream?: NodeJS.WriteStream);
     private _add;
     complete(id: Key): void;
     add(id: Key, data: T): void;
