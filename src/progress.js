@@ -44,8 +44,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MultiProgressBar = void 0;
+const readline = __importStar(require("node:readline"));
 const progress_1 = __importDefault(require("progress"));
-const readline = __importStar(require("readline"));
 class MultiProgressBar {
     _status;
     _stream;

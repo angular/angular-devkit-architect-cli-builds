@@ -46,8 +46,8 @@ const node_1 = require("@angular-devkit/architect/node");
 const core_1 = require("@angular-devkit/core");
 const node_2 = require("@angular-devkit/core/node");
 const ansiColors = __importStar(require("ansi-colors"));
-const fs_1 = require("fs");
-const path = __importStar(require("path"));
+const node_fs_1 = require("node:fs");
+const path = __importStar(require("node:path"));
 const yargs_parser_1 = __importStar(require("yargs-parser"));
 const progress_1 = require("../src/progress");
 function findUp(names, from) {
@@ -59,7 +59,7 @@ function findUp(names, from) {
     while (currentDir && currentDir !== root) {
         for (const name of names) {
             const p = path.join(currentDir, name);
-            if ((0, fs_1.existsSync)(p)) {
+            if ((0, node_fs_1.existsSync)(p)) {
                 return p;
             }
         }
