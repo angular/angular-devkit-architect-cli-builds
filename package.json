@@ -1,6 +1,6 @@
 {
   "name": "@angular-devkit/architect-cli",
-  "version": "0.2000.0-rc.2+sha-5b43174",
+  "version": "0.2000.0-rc.2+sha-aec9504",
   "description": "Angular Architect CLI",
   "homepage": "https://github.com/angular/angular-cli",
   "experimental": true,
