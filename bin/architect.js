@@ -219,3 +219,4 @@ main(process.argv.slice(2)).then((code) => {
     console.error('Error: ' + err.stack || err.message || err);
     process.exit(-1);
 });
+//# sourceMappingURL=architect.js.map

@@ -126,3 +126,4 @@ class MultiProgressBar {
     }
 }
 exports.MultiProgressBar = MultiProgressBar;
+//# sourceMappingURL=progress.js.map
