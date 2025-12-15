@@ -45,9 +45,9 @@ const architect_1 = require("@angular-devkit/architect");
 const node_1 = require("@angular-devkit/architect/node");
 const core_1 = require("@angular-devkit/core");
 const node_2 = require("@angular-devkit/core/node");
-const ansiColors = __importStar(require("ansi-colors"));
 const node_fs_1 = require("node:fs");
 const path = __importStar(require("node:path"));
+const node_util_1 = require("node:util");
 const yargs_parser_1 = __importStar(require("yargs-parser"));
 function findUp(names, from) {
     if (!Array.isArray(names)) {
@@ -85,8 +85,6 @@ function usage(logger, exitCode = 0) {
   `);
     return process.exit(exitCode);
 }
-// Create a separate instance to prevent unintended global changes to the color configuration
-const colors = ansiColors.create();
 async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     const architectHost = new node_1.WorkspaceNodeModulesArchitectHost(workspace, root);
     const architect = new architect_1.Architect(architectHost, registry);
@@ -110,10 +108,10 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
     try {
         const result = await run.lastOutput;
         if (result.success) {
-            parentLogger.info(colors.green('SUCCESS'));
+            parentLogger.info((0, node_util_1.styleText)(['green'], 'SUCCESS'));
         }
         else {
-            parentLogger.info(colors.red('FAILURE'));
+            parentLogger.info((0, node_util_1.styleText)(['red'], 'FAILURE'));
         }
         parentLogger.info('Result: ' + JSON.stringify({ ...result, info: undefined }, null, 4));
         parentLogger.info('\nLogs:');
@@ -123,7 +121,7 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         return result.success ? 0 : 1;
     }
     catch (err) {
-        parentLogger.info(colors.red('ERROR'));
+        parentLogger.info((0, node_util_1.styleText)(['red'], 'ERROR'));
         parentLogger.info('\nLogs:');
         logs.forEach((l) => parentLogger.next(l));
         parentLogger.fatal('Exception:');
@@ -146,9 +144,9 @@ async function main(args) {
     const logger = (0, node_2.createConsoleLogger)(argv['verbose'], process.stdout, process.stderr, {
         info: (s) => s,
         debug: (s) => s,
-        warn: (s) => colors.bold.yellow(s),
-        error: (s) => colors.bold.red(s),
-        fatal: (s) => colors.bold.red(s),
+        warn: (s) => (0, node_util_1.styleText)(['yellow', 'bold'], s),
+        error: (s) => (0, node_util_1.styleText)(['red', 'bold'], s),
+        fatal: (s) => (0, node_util_1.styleText)(['red', 'bold'], s),
     });
     // Check the target.
     const targetStr = argv._[0] || '';
