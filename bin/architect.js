@@ -49,7 +49,6 @@ const ansiColors = __importStar(require("ansi-colors"));
 const node_fs_1 = require("node:fs");
 const path = __importStar(require("node:path"));
 const yargs_parser_1 = __importStar(require("yargs-parser"));
-const progress_1 = require("../src/progress");
 function findUp(names, from) {
     if (!Array.isArray(names)) {
         names = [names];
@@ -86,9 +85,6 @@ function usage(logger, exitCode = 0) {
   `);
     return process.exit(exitCode);
 }
-function _targetStringFromTarget({ project, target, configuration }) {
-    return `${project}:${target}${configuration !== undefined ? ':' + configuration : ''}`;
-}
 // Create a separate instance to prevent unintended global changes to the color configuration
 const colors = ansiColors.create();
 async function _executeTarget(parentLogger, workspace, root, argv, registry) {
@@ -110,38 +106,6 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         camelCasedOptions[(0, yargs_parser_1.camelCase)(key)] = value;
     }
     const run = await architect.scheduleTarget(targetSpec, camelCasedOptions, { logger });
-    const bars = new progress_1.MultiProgressBar(':name :bar (:current/:total) :status');
-    run.progress.subscribe((update) => {
-        const data = bars.get(update.id) || {
-            id: update.id,
-            builder: update.builder,
-            target: update.target,
-            status: update.status || '',
-            name: ((update.target ? _targetStringFromTarget(update.target) : update.builder.name) +
-                ' '.repeat(80)).substring(0, 40),
-        };
-        if (update.status !== undefined) {
-            data.status = update.status;
-        }
-        switch (update.state) {
-            case architect_1.BuilderProgressState.Error:
-                data.status = 'Error: ' + update.error;
-                bars.update(update.id, data);
-                break;
-            case architect_1.BuilderProgressState.Stopped:
-                data.status = 'Done.';
-                bars.complete(update.id);
-                bars.update(update.id, data, update.total, update.total);
-                break;
-            case architect_1.BuilderProgressState.Waiting:
-                bars.update(update.id, data);
-                break;
-            case architect_1.BuilderProgressState.Running:
-                bars.update(update.id, data, update.current, update.total);
-                break;
-        }
-        bars.render();
-    });
     // Wait for full completion of the builder.
     try {
         const result = await run.lastOutput;
@@ -156,7 +120,6 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         logs.forEach((l) => parentLogger.next(l));
         logs.splice(0);
         await run.stop();
-        bars.terminate();
         return result.success ? 0 : 1;
     }
     catch (err) {
