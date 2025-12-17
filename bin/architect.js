@@ -48,7 +48,6 @@ const node_2 = require("@angular-devkit/core/node");
 const node_fs_1 = require("node:fs");
 const path = __importStar(require("node:path"));
 const node_util_1 = require("node:util");
-const yargs_parser_1 = __importStar(require("yargs-parser"));
 function findUp(names, from) {
     if (!Array.isArray(names)) {
         names = [names];
@@ -85,25 +84,16 @@ function usage(logger, exitCode = 0) {
   `);
     return process.exit(exitCode);
 }
-async function _executeTarget(parentLogger, workspace, root, argv, registry) {
+async function _executeTarget(parentLogger, workspace, root, targetStr, options, registry) {
     const architectHost = new node_1.WorkspaceNodeModulesArchitectHost(workspace, root);
     const architect = new architect_1.Architect(architectHost, registry);
     // Split a target into its parts.
-    const { _: [targetStr = ''], help, ...options } = argv;
-    const [project, target, configuration] = targetStr.toString().split(':');
+    const [project, target, configuration] = targetStr.split(':');
     const targetSpec = { project, target, configuration };
     const logger = new core_1.logging.Logger('jobs');
     const logs = [];
     logger.subscribe((entry) => logs.push({ ...entry, message: `${entry.name}: ` + entry.message }));
-    // Camelize options as yargs will return the object in kebab-case when camel casing is disabled.
-    const camelCasedOptions = {};
-    for (const [key, value] of Object.entries(options)) {
-        if (/[A-Z]/.test(key)) {
-            throw new Error(`Unknown argument ${key}. Did you mean ${(0, yargs_parser_1.decamelize)(key)}?`);
-        }
-        camelCasedOptions[(0, yargs_parser_1.camelCase)(key)] = value;
-    }
-    const run = await architect.scheduleTarget(targetSpec, camelCasedOptions, { logger });
+    const run = await architect.scheduleTarget(targetSpec, options, { logger });
     // Wait for full completion of the builder.
     try {
         const result = await run.lastOutput;
@@ -129,19 +119,88 @@ async function _executeTarget(parentLogger, workspace, root, argv, registry) {
         return 2;
     }
 }
+const CLI_OPTION_DEFINITIONS = {
+    'help': { type: 'boolean' },
+    'verbose': { type: 'boolean' },
+};
+/** Parse the command line. */
+function parseOptions(args) {
+    const { values, tokens } = (0, node_util_1.parseArgs)({
+        args,
+        strict: false,
+        tokens: true,
+        allowPositionals: true,
+        allowNegative: true,
+        options: CLI_OPTION_DEFINITIONS,
+    });
+    const builderOptions = {};
+    const positionals = [];
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        if (token.kind === 'positional') {
+            positionals.push(token.value);
+            continue;
+        }
+        if (token.kind !== 'option') {
+            continue;
+        }
+        const name = token.name;
+        let value = token.value ?? true;
+        // `parseArgs` already handled known boolean args and their --no- forms.
+        // Only process options not in CLI_OPTION_DEFINITIONS here.
+        if (name in CLI_OPTION_DEFINITIONS) {
+            continue;
+        }
+        if (/[A-Z]/.test(name)) {
+            throw new Error(`Unknown argument ${name}. Did you mean ${core_1.strings.decamelize(name).replaceAll('_', '-')}?`);
+        }
+        // Handle --no-flag for unknown options, treating it as false
+        if (name.startsWith('no-')) {
+            const realName = name.slice(3);
+            builderOptions[core_1.strings.camelize(realName)] = false;
+            continue;
+        }
+        // Handle value for unknown options
+        if (token.inlineValue === undefined) {
+            // Look ahead
+            const nextToken = tokens[i + 1];
+            if (nextToken?.kind === 'positional') {
+                value = nextToken.value;
+                i++; // Consume next token
+            }
+            else {
+                value = true; // Treat as boolean if no value follows
+            }
+        }
+        // Type inference for numbers
+        if (typeof value === 'string' && !isNaN(Number(value))) {
+            value = Number(value);
+        }
+        const camelName = core_1.strings.camelize(name);
+        if (Object.prototype.hasOwnProperty.call(builderOptions, camelName)) {
+            const existing = builderOptions[camelName];
+            if (Array.isArray(existing)) {
+                existing.push(value);
+            }
+            else {
+                builderOptions[camelName] = [existing, value];
+            }
+        }
+        else {
+            builderOptions[camelName] = value;
+        }
+    }
+    return {
+        positionals,
+        builderOptions,
+        cliOptions: values,
+    };
+}
 async function main(args) {
     /** Parse the command line. */
-    const argv = (0, yargs_parser_1.default)(args, {
-        boolean: ['help'],
-        configuration: {
-            'dot-notation': false,
-            'boolean-negation': true,
-            'strip-aliased': true,
-            'camel-case-expansion': false,
-        },
-    });
+    const { positionals, cliOptions, builderOptions } = parseOptions(args);
     /** Create the DevKit Logger used through the CLI. */
-    const logger = (0, node_2.createConsoleLogger)(argv['verbose'], process.stdout, process.stderr, {
+    const logger = (0, node_2.createConsoleLogger)(!!cliOptions['verbose'], process.stdout, process.stderr, {
         info: (s) => s,
         debug: (s) => s,
         warn: (s) => (0, node_util_1.styleText)(['yellow', 'bold'], s),
@@ -149,8 +208,8 @@ async function main(args) {
         fatal: (s) => (0, node_util_1.styleText)(['red', 'bold'], s),
     });
     // Check the target.
-    const targetStr = argv._[0] || '';
-    if (!targetStr || argv.help) {
+    const targetStr = positionals[0];
+    if (!targetStr || cliOptions.help) {
         // Show architect usage if there's no target.
         usage(logger);
     }
@@ -171,7 +230,7 @@ async function main(args) {
     const { workspace } = await core_1.workspaces.readWorkspace(configFilePath, core_1.workspaces.createWorkspaceHost(new node_2.NodeJsSyncHost()));
     // Clear the console.
     process.stdout.write('\u001Bc');
-    return await _executeTarget(logger, workspace, root, argv, registry);
+    return await _executeTarget(logger, workspace, root, targetStr, builderOptions, registry);
 }
 main(process.argv.slice(2)).then((code) => {
     process.exit(code);
