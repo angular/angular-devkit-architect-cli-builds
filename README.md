@@ -16,7 +16,7 @@ npm install git+https://github.com/angular/angular-devkit-architect-cli-builds.g
 ----
 # Architect CLI
 
-This package contains the executable for running an [Architect Builder](/packages/angular_devkit/architect/README.md).
+This package contains the executable for running an [Architect Builder](https://github.com/angular/angular-devkit-architect-cli-builds/blob/main/README.md).
 
 # Usage
 
