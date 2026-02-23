@@ -1,6 +1,6 @@
 {
   "name": "@angular-devkit/architect-cli",
-  "version": "0.2101.4+sha-1c0c4d5",
+  "version": "0.2101.4+sha-30a632a",
   "type": "module",
   "description": "Angular Architect CLI",
   "homepage": "https://github.com/angular/angular-cli",
@@ -20,7 +20,7 @@
     "tooling"
   ],
   "dependencies": {
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#1c0c4d5"
+    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#30a632a"
   },
   "repository": {
     "type": "git",
